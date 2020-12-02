@@ -11,6 +11,8 @@ Page({
     let that = this
     let jsCode = wx.getStorageSync('code')
     console.log(jsCode)
+    var userInfo= app.globalData.userInfo
+    let userName = userInfo.nickName;
     
     if (options.runData && options.iv) {
       wx.request({
@@ -19,7 +21,8 @@ Page({
         data: {
           'encodeRunData': options.runData,
           'jsCode': jsCode,
-          'iv': options.iv
+          'iv': options.iv,
+          'name':userName
         },
         header: {
           'content-type': 'application/json'
