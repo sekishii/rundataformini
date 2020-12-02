@@ -6,8 +6,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leadingsoft.rundata.domain.entity.RunDataEntity;
 import com.leadingsoft.rundata.domain.model.RunDataInDto;
 import com.leadingsoft.rundata.domain.model.RunDataOutDto;
+import com.leadingsoft.rundata.domain.repository.RunDataRepository;
 import com.leadingsoft.rundata.utils.DateUtil;
 import com.leadingsoft.rundata.utils.DecodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class GetRunDataService {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  @Autowired
+  private RunDataRepository runDataRepository;
 
   public List<RunDataOutDto> decodeRunData(String encodeData, String jsCode, String iv, String name) throws Exception {
 
@@ -82,8 +87,12 @@ public class GetRunDataService {
         outDto.setRunStep(valStr);
       }
     }
+
     outDto.setUserName(name);
     stepMapList.add(outDto);
+
+    // 保存至DB
+    saveRunData(outDto);
     
     
     	
@@ -115,6 +124,15 @@ public class GetRunDataService {
 //      });
 //    }
       return stepMapList;
+    }
+
+    private void saveRunData(RunDataOutDto outDto) {
+      RunDataEntity entity = new RunDataEntity();
+      entity.setUserName(outDto.getUserName());
+      entity.setStatus("A");
+      entity.setRunDate(DateUtil.formatDateStringVal(outDto.getRunDate()));
+      entity.setRunSteps(Integer.parseInt(outDto.getRunStep()));
+      runDataRepository.save(entity);
     }
 
 
