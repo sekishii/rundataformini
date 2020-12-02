@@ -1,14 +1,17 @@
 <view class="container">
 
-  <text class="text">您本日的微信运动步数为：</text>
-  <!-- <text class="request-text">{{runData}}</text> -->
+<text class="text">歩数履歴：</text>
+<!-- <text class="request-text">{{runData}}</text> -->
 
-  <view class="userinfo" wx:for='{{runData}}' wx:for-index='idx' wx:for-item='item'>
-    <view class="userinfo-nickname-wrapper">
-      <text class="userinfo-nickname">{{item.runDate}}</text>
-    </view>
-    <view class="userinfo-nickname-wrapper">
-      <text class="userinfo-nickname">{{item.runStep}}步</text>
-    </view>
+<view class="userinfo" wx:for='{{runData}}' wx:for-index='idx' wx:for-item='item'>
+  <view class="userinfo-nickname-wrapper">
+    <text class="userinfo-nickname">{{item.userName}}</text>
   </view>
+  <view class="userinfo-nickname-wrapper">
+    <text class="userinfo-nickname">{{item.runDate}}</text>
+  </view>
+  <view class="userinfo-nickname-wrapper">
+    <text class="userinfo-nickname">{{item.runStep}}歩</text>
+  </view>
+</view>
 </view>
