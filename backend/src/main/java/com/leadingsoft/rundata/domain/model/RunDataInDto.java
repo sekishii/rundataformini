@@ -10,4 +10,6 @@ public class RunDataInDto {
   private String jsCode;
 
   private String iv;
+  
+  private String name;
 }

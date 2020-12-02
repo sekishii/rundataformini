@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leadingsoft.rundata.domain.model.RunDataInDto;
 import com.leadingsoft.rundata.domain.model.RunDataOutDto;
 import com.leadingsoft.rundata.utils.DateUtil;
 import com.leadingsoft.rundata.utils.DecodeUtil;
@@ -22,8 +23,8 @@ import java.util.*;
 @Service
 public class GetRunDataService {
 
-  private static String APP_ID = "wxff58170d9ec04acb";
-  private static String APP_SECRET = "7d387e4ae361d1cbbc9a3c97f556bad2";
+  private static String APP_ID = "wx5e8d7972ab8c10c1";
+  private static String APP_SECRET = "61de282495ea644bfd40d6f625e5d0ea";
 
   private static String REQ_SESSION_KEY_URL = "https://api.weixin.qq.com/sns/jscode2session?";
 
@@ -33,7 +34,7 @@ public class GetRunDataService {
   @Autowired
   private ObjectMapper objectMapper;
 
-  public List<RunDataOutDto> decodeRunData(String encodeData, String jsCode, String iv) throws Exception {
+  public List<RunDataOutDto> decodeRunData(String encodeData, String jsCode, String iv, String name) throws Exception {
 
     List<RunDataOutDto> stepMapList = new ArrayList<>();
 
@@ -67,33 +68,52 @@ public class GetRunDataService {
     System.out.println(userInfoJSON);
     JSONArray stepList = userInfoJSON.getJSONArray("stepInfoList");
 
+    Object dataObj = stepList.get(0);
+    RunDataOutDto outDto = new RunDataOutDto();
+    for (Object entry : ((Map) dataObj).entrySet()) {
+      String key = (String) ((Map.Entry) entry).getKey();
+      Integer val = (Integer) ((Map.Entry) entry).getValue();
+      String valStr = String.valueOf(val);
 
-    for (Object mapList : stepList) {
-
-      RunDataOutDto outDto = new RunDataOutDto();
-
-      for (Object entry : ((Map) mapList).entrySet()) {
-        String key = (String) ((Map.Entry) entry).getKey();
-        Integer val = (Integer) ((Map.Entry) entry).getValue();
-        String valStr = String.valueOf(val);
-
-        if (StringUtils.equals(key, "timestamp")) {
-          valStr = DateUtil.formatTimestampVal(val, DateUtil.TIME_FORMAT_YYYYMMDD);
-          outDto.setRunDate(valStr);
-        } else if (StringUtils.equals(key, "step")) {
-          outDto.setRunStep(valStr);
-        }
+      if (StringUtils.equals(key, "timestamp")) {
+        valStr = DateUtil.formatTimestampVal(val, DateUtil.TIME_FORMAT_YYYYMMDD);
+        outDto.setRunDate(valStr);
+      } else if (StringUtils.equals(key, "step")) {
+        outDto.setRunStep(valStr);
       }
-
-      stepMapList.add(outDto);
-      stepMapList.sort(new Comparator<RunDataOutDto>() {
-        @Override
-        public int compare(RunDataOutDto o1, RunDataOutDto o2) {
-          return o2.getRunDate().compareTo(o1.getRunDate());
-        }
-      });
     }
-
+    outDto.setUserName(name);
+    stepMapList.add(outDto);
+    
+    
+    	
+//    for (Object mapList : stepList) {
+//
+//      RunDataOutDto outDto = new RunDataOutDto();
+//
+//      for (Object entry : ((Map) mapList).entrySet()) {
+//        String key = (String) ((Map.Entry) entry).getKey();
+//        Integer val = (Integer) ((Map.Entry) entry).getValue();
+//        String valStr = String.valueOf(val);
+//
+//        if (StringUtils.equals(key, "timestamp")) {
+//          valStr = DateUtil.formatTimestampVal(val, DateUtil.TIME_FORMAT_YYYYMMDD);
+//          outDto.setRunDate(valStr);
+//        } else if (StringUtils.equals(key, "step")) {
+//          outDto.setRunStep(valStr);
+//        }
+//      }
+//
+//      outDto.setUserName(name);
+//      
+//      stepMapList.add(outDto);
+//      stepMapList.sort(new Comparator<RunDataOutDto>() {
+//        @Override
+//        public int compare(RunDataOutDto o1, RunDataOutDto o2) {
+//          return o2.getRunDate().compareTo(o1.getRunDate());
+//        }
+//      });
+//    }
       return stepMapList;
     }
 
