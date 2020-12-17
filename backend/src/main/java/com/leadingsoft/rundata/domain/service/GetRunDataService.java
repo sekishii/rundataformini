@@ -6,18 +6,22 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leadingsoft.rundata.domain.entity.RunDataEntity;
 import com.leadingsoft.rundata.domain.model.RunDataInDto;
 import com.leadingsoft.rundata.domain.model.RunDataOutDto;
+import com.leadingsoft.rundata.domain.repository.RunDataRepository;
 import com.leadingsoft.rundata.utils.DateUtil;
 import com.leadingsoft.rundata.utils.DecodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.util.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -33,6 +37,9 @@ public class GetRunDataService {
 
   @Autowired
   private ObjectMapper objectMapper;
+
+  @Autowired
+  private RunDataRepository runDataRepository;
 
   public List<RunDataOutDto> decodeRunData(String encodeData, String jsCode, String iv, String name) throws Exception {
 
@@ -82,8 +89,14 @@ public class GetRunDataService {
         outDto.setRunStep(valStr);
       }
     }
+
     outDto.setUserName(name);
-    stepMapList.add(outDto);
+    ////stepMapList.add(outDto);
+
+    // 保存至DB
+    saveRunData(outDto);
+    //从DB取出数据
+    getRunData(stepMapList);
     
     
     	
@@ -116,6 +129,43 @@ public class GetRunDataService {
 //    }
       return stepMapList;
     }
+
+    private void saveRunData(RunDataOutDto outDto) {
+      RunDataEntity entity = new RunDataEntity();
+      entity.setUserName(outDto.getUserName());
+      entity.setStatus("A");
+      entity.setRunDate(DateUtil.formatDateStringVal(outDto.getRunDate()));
+      entity.setRunSteps(Integer.parseInt(outDto.getRunStep()));
+      //runDataRepository.save(entity);
+      if (runDataRepository.existsById(entity.getUserName())) {//用户存在的情况先删除再插入
+    	  runDataRepository.deleteById(entity.getUserName());
+    	  runDataRepository.save(entity);
+      }else {//不存在的情况下直接插入
+    	  runDataRepository.save(entity);
+      }
+    }
+    
+    private void getRunData(List<RunDataOutDto> stepMapList) {
+        RunDataEntity entity = new RunDataEntity();
+        Date date = new Date(); // 今日の日付
+        SimpleDateFormat today = new SimpleDateFormat("yyyy/MM/dd");//设置当天日期格式
+        String eventDate = today.format(date);
+//        System.out.print(eventDate);
+//        String eventName = "Ba";
+//        System.out.print(eventName);
+        
+        
+        //List<RunDataEntity> dbDataList = runDataRepository.findAll(Sort.by(Sort.Direction.DESC,("runSteps")));//从DB取值按步数降序排列
+        List<RunDataEntity> dbDataList = runDataRepository.findByMatchMonthAndMatchDay(eventDate);//取出当日的数据
+        System.out.print(dbDataList);
+        for(RunDataEntity data : dbDataList) {
+        	RunDataOutDto outDto = new RunDataOutDto();
+        	outDto.setRunDate(data.getRunDate().toString().substring(0, 11));
+        	outDto.setUserName(data.getUserName());
+        	outDto.setRunStep(Integer.toString(data.getRunSteps()));
+        	stepMapList.add(outDto);
+        }
+      }
 
 
     @Bean
