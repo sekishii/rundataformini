@@ -1,53 +1,69 @@
 {
-	"description": "项目配置文件",
+	"description": "Project configuration file",
 	"packOptions": {
-		"ignore": []
+	  "ignore": []
 	},
 	"setting": {
-		"urlCheck": false,
-		"es6": true,
-		"postcss": true,
-		"minified": true,
-		"newFeature": true,
-		"coverView": true,
-		"autoAudits": false,
-		"showShadowRootInWxmlPanel": true,
-		"scopeDataCheck": false,
-		"checkInvalidKey": true,
-		"checkSiteMap": true,
-		"uploadWithSourceMap": true,
-		"babelSetting": {
-			"ignore": [],
-			"disablePlugins": [],
-			"outputPath": ""
-		}
+	  "urlCheck": false,
+	  "es6": true,
+	  "enhance": false,
+	  "postcss": true,
+	  "preloadBackgroundData": false,
+	  "minified": true,
+	  "newFeature": false,
+	  "coverView": true,
+	  "nodeModules": false,
+	  "autoAudits": false,
+	  "showShadowRootInWxmlPanel": true,
+	  "scopeDataCheck": false,
+	  "uglifyFileName": false,
+	  "checkInvalidKey": true,
+	  "checkSiteMap": true,
+	  "uploadWithSourceMap": true,
+	  "compileHotReLoad": false,
+	  "useMultiFrameRuntime": false,
+	  "useApiHook": true,
+	  "babelSetting": {
+		"ignore": [],
+		"disablePlugins": [],
+		"outputPath": ""
+	  },
+	  "useIsolateContext": true,
+	  "useCompilerModule": true,
+	  "userConfirmedUseCompilerModuleSwitch": false,
+	  "packNpmManually": false,
+	  "packNpmRelationList": [],
+	  "minifyWXSS": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.14.0",
-	"appid": "wxff58170d9ec04acb",
-	"projectname": "rundata",
+	"libVersion": "2.13.1",
+	"appid": "wx5e8d7972ab8c10c1",
+	"projectname": "ldjp-run",
 	"debugOptions": {
-		"hidedInDevtools": []
+	  "hidedInDevtools": []
 	},
+	"scripts": {},
 	"isGameTourist": false,
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {
-		"search": {
-			"current": -1,
-			"list": []
-		},
-		"conversation": {
-			"current": -1,
-			"list": []
-		},
-		"game": {
-			"currentL": -1,
-			"list": []
-		},
-		"miniprogram": {
-			"current": -1,
-			"list": []
-		}
+	  "search": {
+		"list": []
+	  },
+	  "conversation": {
+		"list": []
+	  },
+	  "game": {
+		"list": []
+	  },
+	  "plugin": {
+		"list": []
+	  },
+	  "gamePlugin": {
+		"list": []
+	  },
+	  "miniprogram": {
+		"list": []
+	  }
 	}
-}
+  }
