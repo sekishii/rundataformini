@@ -27,6 +27,7 @@ public class GetRunDataController {
     String encodeRunData = inDto.getEncodeRunData();
     String jsCode = inDto.getJsCode();
     String iv = inDto.getIv();
+    String name = inDto.getName();
 
     if (StringUtils.isEmpty(encodeRunData)) {
       return null;
@@ -34,7 +35,7 @@ public class GetRunDataController {
 
     List<RunDataOutDto> decodeRunData = null;
     try {
-      decodeRunData = runDataService.decodeRunData(encodeRunData, jsCode, iv);
+      decodeRunData = runDataService.decodeRunData(encodeRunData, jsCode, iv, name);
     } catch (Exception e) {
       e.printStackTrace();
     }
